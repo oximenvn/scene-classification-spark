@@ -98,11 +98,10 @@ public class SparkMnist {
         dos.flush();
         dos.close();
 
-        org.nd4j.linalg.dataset.api.iterator.DataSetIterator iter = new MnistDataSetIterator(1000,60000);
+        List<DataSet> iter = data.collect();
         Evaluation eval = new Evaluation(10);
-        while(iter.hasNext()) {
-            DataSet next = iter.next();
-            eval.eval(next.getLabels(),model.output(next.getFeatureMatrix(), true));
+        for (DataSet dataSet : iter) {
+            eval.eval(dataSet.getLabels(),model.output(dataSet.getFeatureMatrix(), true));
         }
 
         System.out.println(eval.stats());
